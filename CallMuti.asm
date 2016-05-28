@@ -1,0 +1,24 @@
+;字符串在内存中首地址放入寄存器传递给子程序
+DATAS SEGMENT
+    db 'conversation'
+DATAS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    MOV CX,12
+    MOV BX,DS
+    MOV SI,0
+    CALL CAPITAL
+    MOV AH,4CH
+    INT 21H
+CAPITAL:
+    AND BYTE PTR [SI],11011111B
+    INC SI
+    LOOP CAPITAL
+    RET
+    
+CODES ENDS
+    END START
