@@ -9,7 +9,6 @@ START:
     MOV AX,DATAS
     MOV DS,AX
     MOV CX,12
-    MOV BX,DS
     MOV SI,0
     CALL CAPITAL
     MOV AH,4CH

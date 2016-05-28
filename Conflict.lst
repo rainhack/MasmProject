@@ -1,0 +1,72 @@
+Microsoft (R) Macro Assembler Version 6.11		    05/28/16 15:05:48
+tempfile.asm						     Page 1 - 1
+
+
+				;在子程序的开始将子程序中所有用到的寄存器中的内容都保存起来
+				;在子程序返回前恢复，解决子程序调用寄存器冲突
+				;使用栈来解决
+
+				;子程序开始
+				   ;1.子程序中使用的寄存器入栈
+				   ;2.子程序内容
+				   ;3.子程序中使用的寄存器出栈
+				   ;4.返回(ret,retf)
+ 0000				DATAS SEGMENT
+ 0000  63 6F 6E 76 65 72	    DB 'conversation',0 
+       73 61 74 69 6F 6E
+       00
+ 000D				DATAS ENDS
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS
+ 0000				START:
+ 0000  B8 ---- R		    MOV AX,DATAS
+ 0003  8E D8			    MOV DS,AX
+ 0005  BE 0000			    MOV SI,0
+ 0008  E8 0004			    CALL CAPITAL
+ 000B				CODENDS:
+ 000B  B4 4C			    MOV AH,4CH
+ 000D  CD 21			    INT 21H
+ 000F				CAPITAL:
+ 000F  51			    PUSH CX
+ 0010  56			    PUSH SI
+ 0011				CHANGE:
+ 0011  8A 0C			    MOV CL,[SI]
+ 0013  B5 00			    MOV CH,0
+ 0015  E3 06			    JCXZ OK  ;jcxz指令，如果CX等于0进行跳转,否则向下执行
+ 0017  80 24 DF			    AND BYTE PTR [SI],11011111B
+ 001A  46			    INC SI
+ 001B  EB F2			    JMP SHORT CAPITAL
+ 001D				 OK:
+ 001D  5E			    POP SI
+ 001E  59			    POP CX
+ 001F  C3			    RET       
+ 0020				CODES ENDS
+				    END START
+
+
+Microsoft (R) Macro Assembler Version 6.11		    05/28/16 15:05:48
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 0020	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 000D	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+CAPITAL  . . . . . . . . . . . .	L Near	 000F	  CODES	
+CHANGE . . . . . . . . . . . . .	L Near	 0011	  CODES	
+CODENDS  . . . . . . . . . . . .	L Near	 000B	  CODES	
+OK . . . . . . . . . . . . . . .	L Near	 001D	  CODES	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+
+	   0 Warnings
+	   0 Errors
